@@ -34,18 +34,6 @@ export default function Header() {
 		}
 	}, []);
 
-	function toggleDark() {
-		const next = !dark;
-		setDark(next);
-		if (next) {
-			document.documentElement.classList.add('dark');
-			localStorage.setItem('dark', '1');
-		} else {
-			document.documentElement.classList.remove('dark');
-			localStorage.removeItem('dark');
-		}
-	}
-
 	return (
 		<header className="bg-[#b91c1c] dark:bg-gray-600 text-white relative z-50">
 			<div className="max-w-[1200px] mx-auto flex items-center justify-between p-4 lg:px-0">
@@ -100,13 +88,6 @@ export default function Header() {
 						)}
 					</div>
 
-					<button
-						onClick={toggleDark}
-						className="hidden sm:flex w-12 h-12 bg-white/20 rounded-[12px] justify-center items-center"
-					>
-						{dark ? '🌙' : '☀️'}
-					</button>
-
 					<Link
 						href={'/product-list'}
 						className="bg-white/20 hidden md:block text-white px-4 py-3 rounded-[12px] text-center"
@@ -127,7 +108,7 @@ export default function Header() {
 						)}
 					</button>
 					<button
-						className="w-12 h-12 md:w-auto md:h-12 hidden md:flex md:px-3 bg-white text-[#212121] rounded-[12px] items-center justify-center relative"
+						className="w-12 h-12 md:w-auto md:h-12 hidden md:flex md:px-3 bg-white text-[#212121] rounded-[12px] items-center justify-center relative cursor-pointer"
 						onClick={() => setOpenCart(true)}
 					>
 						<CiShoppingBasket className="w-6 h-6 mr-1" /> Item:{' '}
@@ -150,13 +131,6 @@ export default function Header() {
 				>
 					Product List
 				</Link>
-
-				<button
-					onClick={toggleDark}
-					className="bg-white/20 text-white px-4 py-3 rounded-[12px]"
-				>
-					{dark ? '🌙 Light Mode' : '☀️ Dark Mode'}
-				</button>
 
 				<button
 					onClick={() => setOpenCart(true)}

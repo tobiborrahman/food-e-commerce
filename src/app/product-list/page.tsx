@@ -7,12 +7,19 @@ import { Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import Modal from '@/components/Modal';
 import ProductForm from '@/components/ProductForm';
+import ConfirmModal from '@/components/ConfirmModal';
+import toast from 'react-hot-toast';
 
 export default function ProductListPage() {
 	const dispatch = useAppDispatch();
 	const [open, setOpen] = useState(false);
-	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-	const { products, loading, error } = useAppSelector((state) => state.products);
+	const [selectedProduct, setSelectedProduct] = useState<Product | null>(
+		null
+	);
+	const { products, loading, error } = useAppSelector(
+		(state) => state.products
+	);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -32,12 +39,23 @@ export default function ProductListPage() {
 		setOpen(true);
 	};
 
+	const handleDelete = () => {
+		if (!selectedProduct) return;
+
+		dispatch(deleteProduct(selectedProduct.id));
+		toast.success('Product deleted successfully!');
+		setIsModalOpen(false);
+		setSelectedProduct(null);
+	};
+
 	const handleCloseModal = () => {
 		setOpen(false);
 		setSelectedProduct(null);
 	};
 
-	const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+	const handleItemsPerPageChange = (
+		e: React.ChangeEvent<HTMLSelectElement>
+	) => {
 		setItemsPerPage(Number(e.target.value));
 		setCurrentPage(1);
 	};
@@ -56,7 +74,9 @@ export default function ProductListPage() {
 		<div className="bg-[#FAFAFA]">
 			<div className="py-6 h-auto md:min-h-[734px] max-w-[1200px] mx-auto px-4 lg:px-0 pb-20">
 				<div className="flex justify-between items-center mb-6">
-					<h1 className="text-xl font-bold text-[#212121]">Product List</h1>
+					<h1 className="text-xl font-bold text-[#212121]">
+						Product List
+					</h1>
 					<Link
 						href={'/add-product'}
 						className="bg-[#B71C1C] hover:bg-red-700 text-white rounded-md px-4 py-2"
@@ -65,20 +85,40 @@ export default function ProductListPage() {
 					</Link>
 				</div>
 
-				{loading && <p className="text-gray-600 text-center mt-10">Loading products...</p>}
-				{error && <p className="text-red-500 text-center mt-10">Error: {error}</p>}
+				{loading && (
+					<p className="text-gray-600 text-center mt-10">
+						Loading products...
+					</p>
+				)}
+				{error && (
+					<p className="text-red-500 text-center mt-10">
+						Error: {error}
+					</p>
+				)}
 
 				{!loading && !error && (
 					<div className="overflow-x-auto bg-white rounded shadow-sm border border-gray-200">
 						<table className="w-full text-sm text-left text-gray-700">
 							<thead className="bg-[#F0F0F0] text-[#212121] text-sm">
 								<tr>
-									<th className="px-4 py-3 font-medium">Sl. No.</th>
-									<th className="px-4 py-3 font-medium">Image</th>
-									<th className="px-4 py-3 font-medium">Title</th>
-									<th className="px-4 py-3 font-medium">Price</th>
-									<th className="px-4 py-3 font-medium">Category</th>
-									<th className="px-4 py-3 font-medium text-center">Action</th>
+									<th className="px-4 py-3 font-medium">
+										Sl. No.
+									</th>
+									<th className="px-4 py-3 font-medium">
+										Image
+									</th>
+									<th className="px-4 py-3 font-medium">
+										Title
+									</th>
+									<th className="px-4 py-3 font-medium">
+										Price
+									</th>
+									<th className="px-4 py-3 font-medium">
+										Category
+									</th>
+									<th className="px-4 py-3 font-medium text-center">
+										Action
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -88,7 +128,9 @@ export default function ProductListPage() {
 										className="border-t border-gray-200 hover:bg-gray-50 transition-colors"
 									>
 										<td className="px-4 py-3 font-semibold text-[#212121]">
-											{(indexOfFirstItem + index + 1).toString().padStart(2, '0')}
+											{(indexOfFirstItem + index + 1)
+												.toString()
+												.padStart(2, '0')}
 										</td>
 										<td className="px-4 py-3">
 											<div className="w-10 h-10 overflow-hidden bg-gray-100">
@@ -115,18 +157,34 @@ export default function ProductListPage() {
 												<button
 													className="text-blue-600 hover:text-blue-700"
 													title="Edit"
-													onClick={() => handleEdit(product)}
+													onClick={() =>
+														handleEdit(product)
+													}
 												>
 													<Edit className="w-4 h-4" />
 												</button>
 												<button
-													onClick={() => dispatch(deleteProduct(product.id))}
+													onClick={() => {
+														setIsModalOpen(true);
+														setSelectedProduct(
+															product
+														);
+													}}
 													className="text-red-500 hover:text-red-600"
 													title="Delete"
 												>
 													<Trash2 className="w-4 h-4" />
 												</button>
 											</div>
+											<ConfirmModal
+												isOpen={isModalOpen}
+												title="Delete Product"
+												message="Are you sure you want to delete this product? This action cannot be undone."
+												onConfirm={handleDelete}
+												onCancel={() =>
+													setIsModalOpen(false)
+												}
+											/>
 										</td>
 									</tr>
 								))}
@@ -159,14 +217,19 @@ export default function ProductListPage() {
 
 						<div className="flex items-center gap-1">
 							<button
-								onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+								onClick={() =>
+									setCurrentPage((p) => Math.max(p - 1, 1))
+								}
 								className="px-3 py-1 border border-gray-300 rounded-md disabled:opacity-50"
 								disabled={currentPage === 1}
 							>
 								&lt;
 							</button>
 
-							{Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+							{Array.from(
+								{ length: totalPages },
+								(_, i) => i + 1
+							).map((n) => (
 								<button
 									key={n}
 									onClick={() => setCurrentPage(n)}
@@ -181,7 +244,11 @@ export default function ProductListPage() {
 							))}
 
 							<button
-								onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+								onClick={() =>
+									setCurrentPage((p) =>
+										Math.min(p + 1, totalPages)
+									)
+								}
 								className="px-3 py-1 border border-gray-300 rounded-md disabled:opacity-50"
 								disabled={currentPage === totalPages}
 							>
@@ -194,7 +261,10 @@ export default function ProductListPage() {
 
 			{open && selectedProduct && (
 				<Modal onClose={handleCloseModal}>
-					<ProductForm initialProduct={selectedProduct} onClose={handleCloseModal} />
+					<ProductForm
+						initialProduct={selectedProduct}
+						onClose={handleCloseModal}
+					/>
 				</Modal>
 			)}
 		</div>

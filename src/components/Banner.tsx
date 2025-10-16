@@ -2,7 +2,6 @@ const HeroSection:  React.FC = () => {
 	return (
 		<section className="bg-[radial-gradient(ellipse_at_top_left,_rgba(249,241,235,1),_rgba(247,247,255,1)_40%,_rgba(231,244,248,1)_80%,_rgba(245,238,249,1))]">
 			<div className="flex flex-col md:flex-row items-center justify-between px-4 gap-10 lg:px-0 max-w-[1200px] mx-auto py-20 min-h-[400px]">
-				{/* Left Content */}
 				<div className="text-center md:text-left">
 					<h1 className="text-3xl md:text-4xl font-semibold text-[#212121] leading-snug">
 						<span className="text-red-600 font-bold">
@@ -23,7 +22,6 @@ const HeroSection:  React.FC = () => {
 					</button>
 				</div>
 
-				{/* Right Image */}
 				<div className="w-full md:w-[480px] mt-10 md:mt-0">
 					<img
 						src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBuq0CULEoxWu_1ZiE6yALReEkEAuybxlnGw&s"

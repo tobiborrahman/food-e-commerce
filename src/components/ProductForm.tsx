@@ -35,7 +35,7 @@ export default function ProductForm({ initialProduct, onClose }: { initialProduc
 			<textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" className="w-full border p-2 rounded" />
 			<div className="flex gap-2 justify-end">
 				<button type="button" className="px-4 py-2 border rounded" onClick={onClose}>Cancel</button>
-				<button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+				<button type="submit" className="px-4 py-2 bg-[#B71C1C] text-white rounded">Save</button>
 			</div>
 		</form>
 	);

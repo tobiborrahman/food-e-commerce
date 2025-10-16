@@ -24,7 +24,6 @@ export default function Filters() {
     <aside className="w-full sm:w-64 p-4 rounded-xl">
       <h3 className="font-semibold text-[#212121] mb-4">Filters</h3>
 
-      {/* Price Filter */}
       <div className="mb-6">
         <label className="block text-sm font-bold text-[#212121] mb-2">Price</label>
         <div className="flex items-center space-x-2">
@@ -45,7 +44,6 @@ export default function Filters() {
         </div>
       </div>
 
-      {/* Category Filter */}
       <div className="mb-6">
         <label className="block text-sm font-bold text-[#212121] mb-2">Category</label>
         <div className="space-y-2">
@@ -62,8 +60,6 @@ export default function Filters() {
           ))}
         </div>
       </div>
-
-      {/* Pagination */}
       <div className="mt-6 flex items-center justify-between">
         <button
           className="px-3 py-1 bg-gray-100 text-sm rounded disabled:opacity-50 cursor-pointer"
