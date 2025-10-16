@@ -1,28 +1,37 @@
-'use client';
-
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from './providers';
 import { Toaster } from 'react-hot-toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Work_Sans } from 'next/font/google';
+import ClientLayout from '@/components/ClientLayout';
 
-// export const metadata: Metadata = {
-//   title: 'CityFresh',
-//   description: 'Fresh groceries delivered in 60–90 minutes',
-// };
+const workSans = Work_Sans({
+	subsets: ['latin'],
+	variable: '--font-work-sans',
+	weight: ['400', '500', '600', '700'],
+});
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body className="font-work-sans max-w-[100%] mx-auto">
-        <Providers>
-          <Header />
-          {children}
-          <Footer />
-          <Toaster />
-        </Providers>
-      </body>
-    </html>
-  );
+export const metadata: Metadata = {
+	title: 'CityFresh',
+	description: 'Fresh groceries delivered in 60–90 minutes',
+};
+
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	return (
+		<html lang="en" className={workSans.className}>
+			<body className="max-w-[100%] mx-auto">
+				<Providers>
+					<Header />
+					<ClientLayout>{children}</ClientLayout>
+					<Footer />
+				</Providers>
+			</body>
+		</html>
+	);
 }

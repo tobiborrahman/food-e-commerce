@@ -5,13 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchProducts, setSort } from '@/store/productSlice';
 import ProductCard from '@/components/ProductCard';
 import Filters from '@/components/Filters';
-import { useState } from 'react';
-import Modal from '@/components/Modal';
-import ProductForm from '@/components/ProductForm';
-import Header from '@/components/Header';
 import Banner from '@/components/Banner';
-import Footer from '@/components/Footer';
-import Link from 'next/link';
 
 const PAGE_SIZE = 6;
 
@@ -21,8 +15,6 @@ export default function HomePage() {
 		(state) => state.products
 	);
 
-	console.log('products from store', products);
-
 	useEffect(() => {
 		if (products.length === 0) dispatch(fetchProducts());
 	}, [dispatch, products.length]);
@@ -30,31 +22,28 @@ export default function HomePage() {
 	const filtered = useMemo(() => {
 		let list = products.slice();
 
-		// search
 		if (filters.search.trim()) {
 			const q = filters.search.trim().toLowerCase();
 			list = list.filter((p) => p.title.toLowerCase().includes(q));
 		}
 
-		// category
 		if (filters.category !== 'all') {
 			list = list.filter((p) => p.category === filters.category);
 		}
-		// price
+
 		if (
 			typeof filters.minPrice === 'number' &&
 			!Number.isNaN(filters.minPrice)
 		) {
-			list = list.filter((p) => p.price >= filters.minPrice);
+			list = list.filter((p) => p.price >= (filters.minPrice ?? 0));
 		}
 		if (
 			typeof filters.maxPrice === 'number' &&
 			!Number.isNaN(filters.maxPrice)
 		) {
-			list = list.filter((p) => p.price <= filters.maxPrice);
+			list = list.filter((p) => p.price <= (filters.maxPrice ?? 0));
 		}
 
-		// sort
 		if (filters.sort === 'price-asc') {
 			list.sort((a, b) => a.price - b.price);
 		} else if (filters.sort === 'price-desc') {
@@ -64,8 +53,6 @@ export default function HomePage() {
 		return list;
 	}, [products, filters]);
 
-	console.log('filtered products', filtered);
-
 	const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
 	const currentPage = Math.min(filters.page, totalPages);
 	const paged = filtered.slice(
@@ -73,19 +60,14 @@ export default function HomePage() {
 		currentPage * PAGE_SIZE
 	);
 
-	console.log('current page, paged', currentPage, 'of', totalPages, paged);
-
 	useEffect(() => {
-		console.log('sort changed', filters.sort);
 	}, [filters.sort]);
-
-	console.log('fehtched products', fetchProducts);
 
 	return (
 		<main>
 			<Banner />
 			<div className="bg-[#FAFAFA]">
-				<div className="flex flex-col lg:flex-row gap-10 max-w-[1200px] mx-auto py-[67px]">
+				<div className="flex flex-col lg:flex-row gap-10 max-w-[1200px] mx-auto py-8 lg:py-[67px] px-4 lg:px-0">
 					<Filters />
 					<section className="flex-1">
 						<div className="flex justify-between items-center mb-2">
@@ -98,38 +80,38 @@ export default function HomePage() {
 								</label>
 								<div className="relative inline-block">
 									<select
-									value={filters.sort}
-									onChange={(e) =>
-										dispatch(
-											setSort(
-												e.target.value as
-													| 'none'
-													| 'price-asc'
-													| 'price-desc'
+										value={filters.sort}
+										onChange={(e) =>
+											dispatch(
+												setSort(
+													e.target.value as
+														| 'none'
+														| 'price-asc'
+														| 'price-desc'
+												)
 											)
-										)
-									}
-									className="bg-white border border-[#ECEFF1] rounded-md p-2 max-w-[197px] text-sm focus:outline-none"
-								>
-									<option
-										className="text-[#212121] text-sm font-normal leading-[120%] tracking-[0%]"
-										value="none"
+										}
+										className="bg-white border border-[#ECEFF1] rounded-md p-2 max-w-[197px] text-sm focus:outline-none"
 									>
-										None
-									</option>
-									<option
-										className="text-[#212121] text-sm font-normal leading-[120%] tracking-[0%]"
-										value="price-asc"
-									>
-										Low to High
-									</option>
-									<option
-										className="text-[#212121] text-sm font-normal leading-[120%] tracking-[0%]"
-										value="price-desc"
-									>
-										High to Low
-									</option>
-								</select>								
+										<option
+											className="text-[#212121] text-sm font-normal leading-[120%] tracking-[0%]"
+											value="none"
+										>
+											None
+										</option>
+										<option
+											className="text-[#212121] text-sm font-normal leading-[120%] tracking-[0%]"
+											value="price-asc"
+										>
+											Low to High
+										</option>
+										<option
+											className="text-[#212121] text-sm font-normal leading-[120%] tracking-[0%]"
+											value="price-desc"
+										>
+											High to Low
+										</option>
+									</select>
 								</div>
 							</div>
 						</div>
@@ -151,23 +133,3 @@ export default function HomePage() {
 		</main>
 	);
 }
-
-// function AddProductButton() {
-// 	const [open, setOpen] = useState(false);
-// 	return (
-// 		<>
-// 			<Link
-// 			href={'/add-product'}
-// 				className="px-4 py-2 bg-green-600 text-white rounded"
-// 				onClick={() => setOpen(true)}
-// 			>
-// 				Add Product
-// 			</Link>
-// 			{open && (
-// 				<Modal onClose={() => setOpen(false)}>
-// 					<ProductForm onClose={() => setOpen(false)} />
-// 				</Modal>
-// 			)}
-// 		</>
-// 	);
-// }

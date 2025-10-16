@@ -38,7 +38,6 @@ const initialState: ProductsState = {
 	},
 };
 
-// Async thunk for fetching products
 export const fetchProducts = createAsyncThunk<Product[]>(
 	'products/fetchProducts',
 	async () => {
@@ -78,7 +77,7 @@ const productSlice = createSlice({
 		},
 		setSort: (state, action: PayloadAction<'none' | 'price-asc' | 'price-desc'>) => {
 			state.filters.sort = action.payload;
-			state.filters.page = 1; // optional, to reset pagination when sorting
+			state.filters.page = 1;
 		},
 		setPage: (state, action: PayloadAction<number>) => {
 			state.filters.page = action.payload;

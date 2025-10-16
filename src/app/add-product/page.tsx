@@ -17,7 +17,6 @@ export default function AddProductPage() {
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 
-	// Get existing products to generate unique ID
 	const products = useAppSelector((state) => state.products.products);
 
 	const [product, setProduct] = useState<NewProduct>({
@@ -30,7 +29,6 @@ export default function AddProductPage() {
 
 	const [preview, setPreview] = useState<string | null>(null);
 
-	// Handle form field changes
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
@@ -38,7 +36,6 @@ export default function AddProductPage() {
 		setProduct((prev) => ({ ...prev, [name]: value }));
 	};
 
-	// Handle image selection
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0] || null;
 		setProduct((prev) => ({ ...prev, image: file }));
@@ -52,11 +49,9 @@ export default function AddProductPage() {
 		}
 	};
 
-	// Handle form submission
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
-		// Validate required fields
 		if (
 			!product.title ||
 			!product.category ||
@@ -67,7 +62,6 @@ export default function AddProductPage() {
 			return;
 		}
 
-		// Generate unique ID based on existing products
 		const newId =
 			products.length > 0
 				? Math.max(...products.map((p) => p.id)) + 1
@@ -79,13 +73,10 @@ export default function AddProductPage() {
 			category: product.category,
 			price: parseFloat(product.price),
 			description: product.details,
-			image: preview, // replace with uploaded URL if needed
+			image: preview || ''
 		};
 
-		// Add product to Redux store
 		dispatch(addProduct(newProduct));
-
-		// Navigate back to product list
 		router.push('/product-list');
 	};
 
@@ -119,10 +110,10 @@ export default function AddProductPage() {
 							className="border border-[#DCDCDC] rounded-md p-[11px] mb-2 focus:outline-none"
 						>
 							<option value="">Select category</option>
-							<option value="electronics">men's clothing</option>
-							<option value="fashion">women's clothing</option>
-							<option value="books">jewelery</option>
-							<option value="home">electronics</option>
+							<option value="men's clothing">men's clothing</option>
+							<option value="women's clothing">women's clothing</option>
+							<option value="jewelery">jewelery</option>
+							<option value="electronicse">electronics</option>
 						</select>
 						<label className="text-[16px] font-normal leading-0 text-[#212121]">
 							Price*
@@ -148,29 +139,66 @@ export default function AddProductPage() {
 					</div>
 
 					{/* Right side: image upload */}
-					<div className="">
+					<div>
 						<p className="text-[16px] font-normal leading-0 text-[#212121] mb-4">
 							Image
 						</p>
-						<div className="flex flex-col h-[213px] items-center justify-center border border-dashed border-[#B71C1C] rounded-md p-4">
+
+						<div
+							className="flex flex-col items-center justify-center border-2 border-dashed border-[#E57373] rounded-md p-6 h-[213px] bg-[#FCFCFC] relative transition-all hover:bg-[#fff7f7]"
+							onDragOver={(e) => e.preventDefault()}
+							onDrop={(e) => {
+								e.preventDefault();
+								const file = e.dataTransfer.files[0];
+								if (file)
+									handleFileChange({
+										target: { files: [file] },
+									} as any);
+							}}
+						>
 							{preview ? (
 								<img
 									src={preview}
 									alt="Preview"
-									className="max-h-40 object-contain mb-2"
+									className="max-h-[160px] object-contain mb-2 rounded-md"
 								/>
 							) : (
-								<div className="flex flex-col items-center justify-center text-gray-400">
-									{/* <p>Choose or drag & drop an image</p> */}
-								</div>
+								<>
+									<div className="flex flex-col items-center justify-center text-gray-500">
+										{/* Upload Icon */}
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="#004D40"
+											className="w-8 h-8 mb-2"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v4h16v-4"
+											/>
+										</svg>
+										<p className="text-sm text-[#212121] mb-3">
+											Choose or drag & drop an image
+										</p>
+									</div>
+									<label
+										htmlFor="fileUpload"
+										className="px-3 py-1.5 border border-[#E57373] text-[#B71C1C] rounded-md cursor-pointer text-sm hover:bg-[#FFF5F5] transition"
+									>
+										Browse File
+									</label>
+									<input
+										id="fileUpload"
+										type="file"
+										accept="image/*"
+										onChange={handleFileChange}
+										className="hidden"
+									/>
+								</>
 							)}
-							<input
-								type="file"
-								accept="image/*"
-								placeholder="Browse File"
-								onChange={handleFileChange}
-								className="text-xl text-[#212121] cursor-pointer text-center"
-							/>
 						</div>
 					</div>
 

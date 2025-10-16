@@ -19,13 +19,12 @@ export default function ProductCard({ product }: ProductCardProps) {
 	const [open, setOpen] = useState(false);
 	const [show, setShow] = useState(false);
 	const dispatch = useAppDispatch();
-	const dropdownRef = useRef<HTMLDivElement>(null); // 👈 reference to dropdown
+	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const item = useAppSelector((state: RootState) =>
 		state.cart.items.find((i) => i.id === product.id)
 	);
 
-	// 👇 Close dropdown when clicking outside
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
 			if (
@@ -61,7 +60,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 
 	return (
 		<div className="relative rounded-xl p-3 bg-white flex flex-col hover:shadow-lg transition">
-			{/* Three Dots */}
 			<div
 				className="w-7 h-7 rounded-full bg-gray-100 absolute top-1 right-1 flex items-center justify-center cursor-pointer"
 				onClick={() => setShow((prev) => !prev)}
@@ -69,10 +67,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 				<BsThreeDotsVertical />
 			</div>
 
-			{/* Dropdown */}
 			{show && (
 				<div
-					ref={dropdownRef} // 👈 attach the ref here
+					ref={dropdownRef}
 					className="w-32 bg-white shadow-lg rounded-md p-2 absolute top-10 right-2 flex flex-col gap-2 z-50"
 				>
 					<button
@@ -95,7 +92,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 				</div>
 			)}
 
-			{/* Product Info */}
 			<img
 				src={product.image}
 				alt={product.title}
@@ -105,12 +101,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 			<p className="font-bold text-[#B71C1C] mt-auto">${product.price}</p>
 			<p className="text-sm text-gray-500">{product.category}</p>
 
-			{/* Quantity Controls */}
 			<div className="flex items-center justify-between mt-3 gap-2">
 				<div className="flex items-center bg-white border border-gray-300 rounded-lg select-none">
 					<button
 						onClick={handleDecrease}
-						className="px-3 py-[11px] bg-gray-100 text-[#6B7280] hover:bg-gray-100 transition rounded-l-lg"
+						className="px-3 py-[11px] bg-gray-100 text-[#6B7280] hover:bg-gray-100 transition rounded-l-lg cursor-pointer"
 					>
 						<Minus size={18} />
 					</button>
@@ -121,7 +116,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
 					<button
 						onClick={handleIncrease}
-						className="px-3 py-[11px] bg-gray-100 text-[#6B7280] hover:bg-gray-100 transition rounded-r-lg"
+						disabled={(item?.quantity ?? 0) > 0}
+						className="px-3 py-[11px] bg-gray-100 text-[#6B7280] hover:bg-gray-100 transition rounded-r-lg cursor-pointer"
 					>
 						<Plus size={18} />
 					</button>
@@ -132,7 +128,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 				</div>
 			</div>
 
-			{/* Edit Modal */}
 			{open && (
 				<Modal onClose={() => setOpen(false)}>
 					<ProductForm
