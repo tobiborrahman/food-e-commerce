@@ -7,7 +7,7 @@ export default function Cart({ onClose }: { onClose: () => void }) {
   const total = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
   return (
-    <div className="p-6 w-full max-w-full text-gray-900">
+    <div className="p-6 w-full max-w-full max-h-[400px] overflow-scroll text-gray-900">
       {/* Header */}
       <h2 className="text-2xl font-semibold mb-5 text-center sm:text-left text-gray-900">
         Your Cart
